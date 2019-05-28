@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION add_activity(in_title character varying(200),in_descr
 	END
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION find_all_activities(activities_cursor refcursor) RETURNS refcursor AS $$
+CREATE OR REPLACE FUNCTION find_all_activities(OUT activities_cursor refcursor) AS $$
 BEGIN
 	OPEN activities_cursor FOR
         SELECT act.id AS id, title, description, creation_date, modification_date, owner_id, username
@@ -30,6 +30,5 @@ BEGIN
         LEFT JOIN "user" owner
         ON act.owner_id = owner.id
         ORDER BY title, username;
-    RETURN activities_cursor;
 END
 $$ LANGUAGE plpgsql;

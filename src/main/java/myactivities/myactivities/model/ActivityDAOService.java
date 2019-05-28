@@ -28,10 +28,14 @@ public interface ActivityDAOService {
     @ResultMap("activity")
     public Activity getActivityForId(Long id);
 
-    @Insert(value= "{CALL find_all_activities(#{result,mode=OUT, jdbcType=OTHER, javaType=java.sql.ResultSet, resultMap=activity})}")
+    @Insert(value= "{CALL find_all_activities(" +
+    	    "#{result,mode=OUT, jdbcType=OTHER, javaType=java.sql.ResultSet, resultMap=activity})}")
     @Options(statementType = StatementType.CALLABLE)
     public void findAllActivitiesWithProcedureCall(Map<String,List<Activity>> parameters);
 
-	public List<Activity> findAllActivities();
+    @Select(value= "select act.*, username from activity act " + 
+    		"  	left join \"user\" owner on act.owner_id = owner_id")
+    @ResultMap("activity")
+    public List<Activity> findAllActivities();
     
 }
